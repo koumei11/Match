@@ -18,9 +18,7 @@ import Swiper from "../../components/swipe/Swiper";
 const ReceiveGoodScreen = () => {
   return (
     <View style={{ backgroundColor: "#fff", flex: 1, paddingLeft: "25%" }}>
-      <View style={{ top: "20%" }}>
-        <Swiper />
-      </View>
+      <Swiper />
     </View>
   );
 };

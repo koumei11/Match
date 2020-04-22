@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import {
   Text,
   View,
@@ -11,6 +11,8 @@ import persons from "../../dummy-data/persons";
 import Card from "../Card";
 
 const Swiper = () => {
+  //   const [count, setCount] = useState(persons.length);
+  //   const ref = useRef(persons);
   const renderCard = (person) => {
     return (
       <Card
@@ -30,29 +32,46 @@ const Swiper = () => {
   // 右にスワイプされた時に発火
   const onSwipeRight = (item) => {
     console.log("Swiped Right!!!");
+    // setData((data) => data.filter((person) => person.id !== item.id));
+    // setCount((count) => count - 1);
+    // console.log(item);
+    // ref.current = ref.current.filter((person) => person.id !== item.id);
   };
 
   // 左にスワイプされた時に発火
   const onSwipeLeft = (item) => {
     console.log("Swiped Left!!!");
+    // setData((data) => data.filter((person) => person.id !== item.id));
+    // setCount((count) => count - 1);
+    // console.log(item);
+    // ref.current = ref.current.filter((person) => person.id !== item.id);
   };
 
   const renderNoMoreCards = () => {
     return (
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Text>終わり</Text>
       </View>
     );
   };
 
   return (
-    <Deck
-      data={persons}
-      renderCard={renderCard}
-      renderNoMoreCards={renderNoMoreCards}
-      onSwipeRight={onSwipeRight}
-      onSwipeLeft={onSwipeLeft}
-    />
+    <View style={{ top: "15%" }}>
+      {/* <Text>{ref.current.length}</Text> */}
+      {/* <Text>{count}</Text> */}
+      <Deck
+        data={persons}
+        renderCard={renderCard}
+        renderNoMoreCards={renderNoMoreCards}
+        onSwipeRight={onSwipeRight}
+        onSwipeLeft={onSwipeLeft}
+      />
+    </View>
   );
 };
 

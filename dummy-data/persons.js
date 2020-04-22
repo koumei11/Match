@@ -23,96 +23,96 @@ export default [
     true
   ),
   new Person(4, "まゆ", 0, 30, 152, "埼玉", "../assets/image/sample.JPG", true),
-  new Person(
-    5,
-    "みやび",
-    0,
-    32,
-    164,
-    "千葉",
-    "../assets/image/sample.JPG",
-    false
-  ),
-  new Person(
-    6,
-    "まい",
-    0,
-    22,
-    151,
-    "東京",
-    "../assets/image/sample.JPG",
-    false
-  ),
-  new Person(
-    7,
-    "さとこ",
-    0,
-    26,
-    170,
-    "埼玉",
-    "../assets/image/sample.JPG",
-    false
-  ),
-  new Person(
-    8,
-    "ちえ",
-    0,
-    28,
-    161,
-    "鹿児島",
-    "../assets/image/sample.JPG",
-    true
-  ),
-  new Person(
-    9,
-    "さえ",
-    0,
-    33,
-    169,
-    "大阪",
-    "../assets/image/sample.JPG",
-    false
-  ),
-  new Person(
-    10,
-    "みゆ",
-    0,
-    25,
-    162,
-    "茨城",
-    "../assets/image/sample.JPG",
-    false
-  ),
-  new Person(
-    11,
-    "えみ",
-    0,
-    36,
-    154,
-    "千葉",
-    "../assets/image/sample.JPG",
-    true
-  ),
-  new Person(
-    12,
-    "りお",
-    0,
-    27,
-    157,
-    "京都",
-    "../assets/image/sample.JPG",
-    false
-  ),
-  new Person(
-    13,
-    "ゆり",
-    0,
-    29,
-    155,
-    "長野",
-    "../assets/image/sample.JPG",
-    true
-  ),
+  // new Person(
+  //   5,
+  //   "みやび",
+  //   0,
+  //   32,
+  //   164,
+  //   "千葉",
+  //   "../assets/image/sample.JPG",
+  //   false
+  // ),
+  // new Person(
+  //   6,
+  //   "まい",
+  //   0,
+  //   22,
+  //   151,
+  //   "東京",
+  //   "../assets/image/sample.JPG",
+  //   false
+  // ),
+  // new Person(
+  //   7,
+  //   "さとこ",
+  //   0,
+  //   26,
+  //   170,
+  //   "埼玉",
+  //   "../assets/image/sample.JPG",
+  //   false
+  // ),
+  // new Person(
+  //   8,
+  //   "ちえ",
+  //   0,
+  //   28,
+  //   161,
+  //   "鹿児島",
+  //   "../assets/image/sample.JPG",
+  //   true
+  // ),
+  // new Person(
+  //   9,
+  //   "さえ",
+  //   0,
+  //   33,
+  //   169,
+  //   "大阪",
+  //   "../assets/image/sample.JPG",
+  //   false
+  // ),
+  // new Person(
+  //   10,
+  //   "みゆ",
+  //   0,
+  //   25,
+  //   162,
+  //   "茨城",
+  //   "../assets/image/sample.JPG",
+  //   false
+  // ),
+  // new Person(
+  //   11,
+  //   "えみ",
+  //   0,
+  //   36,
+  //   154,
+  //   "千葉",
+  //   "../assets/image/sample.JPG",
+  //   true
+  // ),
+  // new Person(
+  //   12,
+  //   "りお",
+  //   0,
+  //   27,
+  //   157,
+  //   "京都",
+  //   "../assets/image/sample.JPG",
+  //   false
+  // ),
+  // new Person(
+  //   13,
+  //   "ゆり",
+  //   0,
+  //   29,
+  //   155,
+  //   "長野",
+  //   "../assets/image/sample.JPG",
+  //   true
+  // ),
   // new Person(
   //   14,
   //   "菜々",

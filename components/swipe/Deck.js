@@ -30,12 +30,11 @@ const Deck = ({
           // 動いていなかったらクリックしたとみなす
           if (gesture.dx === 0 && gesture.dy === 0) {
             console.log("navigationする");
-          }
-          // ある閾値まで動いたら右にスワイプ
-          if (gesture.dx > SWIPE_THRESHOLD) {
+          } else if (gesture.dx > SWIPE_THRESHOLD) {
+            // ある閾値まで動いたら右にスワイプ
             forceSwipe("right");
-            // ある閾値まで動いたら左にスワイプ
           } else if (gesture.dx < -SWIPE_THRESHOLD) {
+            // ある閾値まで動いたら左にスワイプ
             forceSwipe("left");
           } else {
             // 閾値まで行ってなければ元の場所に戻す

@@ -5,7 +5,7 @@ import {
   // Button,
   // Dimensions,
   // Platform,
-  SafeAreaView,
+  View,
 } from "react-native";
 // import Card from "../../components/Card";
 import Swiper from "../../components/swipe/Swiper";
@@ -17,9 +17,11 @@ import Swiper from "../../components/swipe/Swiper";
 
 const ReceiveGoodScreen = () => {
   return (
-    <SafeAreaView style={{ backgroundColor: "#fff" }}>
-      <Swiper />
-    </SafeAreaView>
+    <View style={{ backgroundColor: "#fff", flex: 1, paddingLeft: "25%" }}>
+      <View style={{ top: "20%" }}>
+        <Swiper />
+      </View>
+    </View>
   );
 };
 

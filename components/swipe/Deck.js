@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Text, View, Animated, PanResponder, Dimensions } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons";
+import TouchComponent from "../../components/TouchComponent";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
@@ -12,11 +14,15 @@ const Deck = ({
   onSwipeLeft,
   renderNoMoreCards,
 }) => {
+  // カードのポジション
   const [pos, setPos] = useState(new Animated.ValueXY());
   // スムーズなアニメーションを実現するために2つ目のposを指定
   const [pos2, setPos2] = useState(new Animated.ValueXY());
+  // スワイプのindex
   const [deckIndex, setDeckIndex] = useState(0);
+  // もらったいいねのカウント数
   const [count, setCount] = useState(data.length);
+
   // 頻繁に呼ばれるためuseMemoでキャッシュしておく
   const panResponder = useMemo(
     () =>
@@ -51,12 +57,12 @@ const Deck = ({
   }, [data, renderCard, onSwipeRight, onSwipeLeft, renderNoMoreCards]);
 
   // スワイプを強制
-  const forceSwipe = (direction) => {
+  const forceSwipe = (direction, isButton = false) => {
     // 画面幅の1.5倍のところまでスワイプ
     const x = direction === "right" ? SCREEN_WIDTH * 1.5 : -SCREEN_WIDTH * 1.5;
     Animated.timing(pos, {
       toValue: { x, y: 0 },
-      duration: SWIPE_OUT_DURATION,
+      duration: isButton ? SWIPE_OUT_DURATION * 3 : SWIPE_OUT_DURATION,
     }).start(() => onSwipeComplete(direction));
   };
 
@@ -69,7 +75,7 @@ const Deck = ({
     // スワイプしたら次のカードが少し上がるようにする
     Animated.timing(pos2, {
       toValue: { x: 0, y: -10 },
-      duration: 300,
+      duration: 230,
     }).start(() => {
       pos.setValue({ x: 0, y: 0 });
       pos2.setValue({ x: 0, y: 0 });
@@ -141,9 +147,55 @@ const Deck = ({
   };
 
   return (
-    <View>
-      <Text style={{ display: count === 0 ? "none" : "flex" }}>{count}</Text>
+    <View style={{ top: 10, height: "100%" }}>
+      <View
+        style={{
+          ...styles.countContainer,
+          display: count <= 0 ? "none" : "flex",
+        }}
+      >
+        <Text style={styles.countText}>{count}</Text>
+      </View>
       <Animated.View style={pos2.getLayout()}>{renderCards()}</Animated.View>
+      <View
+        style={{
+          display: count <= 0 ? "none" : "flex",
+          flexDirection: "row",
+          position: "absolute",
+          bottom: Dimensions.get("window").height * 0.12,
+          justifyContent: "space-between",
+          width: SCREEN_WIDTH * 0.5,
+        }}
+      >
+        <TouchComponent
+          original={{
+            display: count <= 0 ? "none" : "flex",
+            borderColor: "#E54E37",
+            height: SCREEN_WIDTH * 0.2,
+            width: SCREEN_WIDTH * 0.2,
+          }}
+          onButtonPress={forceSwipe.bind(this, "left", true)}
+        >
+          <FontAwesome5
+            name="grin-beam-sweat"
+            style={{ color: "#E54E37", fontSize: SCREEN_WIDTH * 0.07 }}
+          />
+        </TouchComponent>
+        <TouchComponent
+          original={{
+            display: count <= 0 ? "none" : "flex",
+            borderColor: "#66CCCC",
+            height: SCREEN_WIDTH * 0.2,
+            width: SCREEN_WIDTH * 0.2,
+          }}
+          onButtonPress={forceSwipe.bind(this, "right", true)}
+        >
+          <FontAwesome5
+            name="grin-beam"
+            style={{ color: "#66CCCC", fontSize: SCREEN_WIDTH * 0.07 }}
+          />
+        </TouchComponent>
+      </View>
     </View>
   );
 };
@@ -159,6 +211,25 @@ const styles = {
     position: "absolute",
     zIndex: cardIndex * -1,
   }),
+  countContainer: {
+    flexDirection: "row",
+    fontWeight: "bold",
+    marginBottom: SCREEN_WIDTH * 0.1,
+    alignItems: "center",
+    justifyContent: "center",
+    width: SCREEN_WIDTH * 0.5,
+  },
+  countText: {
+    color: "#e05c92",
+    fontWeight: "bold",
+    position: "absolute",
+    fontSize: 18,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    position: "absolute",
+    bottom: 0,
+  },
 };
 
 export default Deck;

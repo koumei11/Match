@@ -10,7 +10,7 @@ import Deck from "./Deck";
 import persons from "../../dummy-data/persons";
 import Card from "../Card";
 
-const Swiper = () => {
+const Swiper = (props) => {
   //   const [count, setCount] = useState(persons.length);
   //   const ref = useRef(persons);
   const renderCard = (person) => {
@@ -21,9 +21,11 @@ const Swiper = () => {
         address={person.address}
         imageUrl={person.image}
         hasVideo={person.hasVideo}
+        intro={person.intro}
         originalStyles={{
           width: Dimensions.get("window").width * 0.5,
           height: Dimensions.get("window").height * 0.4,
+          borderWidth: person.hasVideo ? 0 : 0.6,
         }}
       />
     );
@@ -49,19 +51,14 @@ const Swiper = () => {
 
   const renderNoMoreCards = () => {
     return (
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <View>
         <Text>終わり</Text>
       </View>
     );
   };
 
   return (
-    <View style={{ top: "15%" }}>
+    <View style={{ top: "5%" }}>
       {/* <Text>{ref.current.length}</Text> */}
       {/* <Text>{count}</Text> */}
       <Deck

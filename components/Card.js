@@ -3,7 +3,15 @@ import { View, Text, StyleSheet, ImageBackground } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../constants/Colors";
 
-const Card = ({ name, age, address, hasVideo, imageUrl, originalStyles }) => {
+const Card = ({
+  name,
+  age,
+  address,
+  hasVideo,
+  imageUrl,
+  intro,
+  originalStyles,
+}) => {
   // ビデオを投稿しているかどうかで条件分岐
   const configs = hasVideo
     ? {
@@ -18,9 +26,17 @@ const Card = ({ name, age, address, hasVideo, imageUrl, originalStyles }) => {
   // ビデオを投稿しているかどうかで条件分岐
   const WrapperView = hasVideo ? LinearGradient : View;
 
+  // 最初にカードに表示する文字数を制限
+  let shortIntro =
+    intro.length > 20 ? intro.substr(0, 20) + "..." : (shortIntro = intro);
+
   return (
     <WrapperView
-      style={{ ...styles.container, ...originalStyles }}
+      style={{
+        ...styles.container,
+        ...originalStyles,
+        padding: hasVideo ? 3 : 0,
+      }}
       {...configs}
     >
       <View style={{ ...styles.content, ...borderStyle }}>
@@ -34,7 +50,7 @@ const Card = ({ name, age, address, hasVideo, imageUrl, originalStyles }) => {
             start={{ x: 0, y: 1 }}
             end={{ x: 0, y: 0 }}
             style={{
-              height: "22%",
+              height: "35%",
               width: "100%",
               position: "absolute",
               bottom: 0,
@@ -54,6 +70,7 @@ const Card = ({ name, age, address, hasVideo, imageUrl, originalStyles }) => {
                 <Text style={styles.userInfo}>{age}歳</Text>
                 <Text style={styles.userInfo}>{address}</Text>
               </View>
+              <Text style={styles.intro}>{shortIntro}</Text>
             </View>
           </LinearGradient>
         </ImageBackground>
@@ -67,11 +84,17 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 15,
     height: 250,
-    padding: 3,
+    shadowColor: "black",
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 2,
+
+    borderColor: "white",
   },
   content: {
     flex: 1,
-    borderRadius: 10,
+    borderRadius: 15,
     overflow: "hidden",
   },
   imgBackground: {
@@ -87,11 +110,16 @@ const styles = StyleSheet.create({
   userInfoContainer: {
     flexDirection: "row",
     alignItems: "flex-end",
+    marginBottom: 5,
   },
   userInfo: {
     color: "white",
     fontSize: 12,
     marginRight: 10,
+  },
+  intro: {
+    fontSize: 8,
+    color: "white",
   },
 });
 

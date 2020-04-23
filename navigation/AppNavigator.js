@@ -33,6 +33,7 @@ const PersonStack = () => {
         name={Strings.person}
         options={{
           title: "さがす",
+          headerShown: false,
           headerTintColor: Colors.headerColor,
           headerRight: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
@@ -71,7 +72,8 @@ const ReceiveStack = () => {
       <Stack.Screen
         name={Strings.receive}
         options={{
-          headerShown: false,
+          headerTintColor: Colors.headerColor,
+          title: "お相手からのいいね！",
         }}
         component={ReceiveGoodScreen}
       />

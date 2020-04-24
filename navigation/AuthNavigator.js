@@ -24,7 +24,7 @@ const LoginStack = () => {
         headerTintColor: Colors.baseColor,
       }}
     >
-      <Stack.Screen name="SignIn" component={SignInScreen} />
+      {/* <Stack.Screen name="SignIn" component={SignInScreen} /> */}
       {/* <Stack.Screen
         name="Start"
         options={{

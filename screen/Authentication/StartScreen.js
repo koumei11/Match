@@ -12,7 +12,7 @@ import {
 
 import { useFonts } from "@use-expo/font";
 
-import ButtonComponent from "../../components/ButtonComponent";
+import ButtonComponent from "../../components/buttons/ButtonComponent";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import Strings from "../../constants/Strings";

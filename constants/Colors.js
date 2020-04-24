@@ -11,4 +11,5 @@ export default {
   subColor2: "#A0A0A0",
   buttonColor: "#1AA0FB",
   buttonColor2: "#66CCCC",
+  color1: "#e05c92",
 };

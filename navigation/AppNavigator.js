@@ -1,4 +1,5 @@
 import React from "react";
+import { TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -13,10 +14,6 @@ import WrapScreen from "../screen/Application/WrapScreen";
 import Colors from "../constants/Colors";
 import Strings from "../constants/Strings";
 import Person from "../models/Person";
-
-import HeaderButton from "../components/HeaderButton";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { Platform } from "react-native";
 
 // デモデータ
 const person = new Person(1, "こう", 1, 20, 178, "東京");
@@ -34,20 +31,6 @@ const PersonStack = () => {
         options={{
           title: "さがす",
           headerShown: false,
-          headerTintColor: Colors.headerColor,
-          headerRight: () => (
-            <HeaderButtons HeaderButtonComponent={HeaderButton}>
-              <Item
-                title="filter"
-                iconName={
-                  Platform.OS === "android" ? "md-search" : "ios-search"
-                }
-                onPress={() => {
-                  console.log("HeaderButton!");
-                }}
-              />
-            </HeaderButtons>
-          ),
         }}
         component={PersonListScreen}
       />
@@ -74,6 +57,23 @@ const ReceiveStack = () => {
         options={{
           headerTintColor: Colors.headerColor,
           title: "お相手からのいいね！",
+          headerRight: () => {
+            return (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => {
+                  "history clicked!!";
+                }}
+              >
+                <FontAwesome
+                  name="history"
+                  size={20}
+                  color={Colors.headerColor}
+                  style={{ marginRight: 20 }}
+                />
+              </TouchableOpacity>
+            );
+          },
         }}
         component={ReceiveGoodScreen}
       />

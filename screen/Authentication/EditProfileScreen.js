@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from "react-native";
-import RadioButton from "../../components/RadioButton";
+import RadioButton from "../../components/buttons/RadioButton";
 import RNPickerSelect from "react-native-picker-select";
 import places from "../../data/places";
 import Colors from "../../constants/Colors";

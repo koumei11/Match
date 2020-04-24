@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Text, View, Animated, PanResponder, Dimensions } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import TouchComponent from "../../components/TouchComponent";
+import TouchComponent from "../buttons/TouchComponent";
+import Colors from "../../constants/Colors";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
@@ -22,6 +23,8 @@ const Deck = ({
   const [deckIndex, setDeckIndex] = useState(0);
   // もらったいいねのカウント数
   const [count, setCount] = useState(data.length);
+  // 現在のターゲット
+  const person = data[deckIndex];
 
   // 頻繁に呼ばれるためuseMemoでキャッシュしておく
   const panResponder = useMemo(
@@ -57,31 +60,31 @@ const Deck = ({
   }, [data, renderCard, onSwipeRight, onSwipeLeft, renderNoMoreCards]);
 
   // スワイプを強制
-  const forceSwipe = (direction, isButton = false) => {
+  const forceSwipe = (direction) => {
     // 画面幅の1.5倍のところまでスワイプ
     const x = direction === "right" ? SCREEN_WIDTH * 1.5 : -SCREEN_WIDTH * 1.5;
     Animated.timing(pos, {
       toValue: { x, y: 0 },
-      duration: isButton ? SWIPE_OUT_DURATION * 3 : SWIPE_OUT_DURATION,
+      duration: SWIPE_OUT_DURATION * 2.5,
     }).start(() => onSwipeComplete(direction));
   };
 
   // スワイプ終了時に呼ばれる
   const onSwipeComplete = (direction) => {
-    const item = data[deckIndex];
     // 右スワイプ、左スワイプで別々の関数を呼び出す
-    direction === "right" ? onSwipeRight(item) : onSwipeLeft(item);
+    console.log(deckIndex);
+    direction === "right" ? onSwipeRight(person) : onSwipeLeft(person);
 
     // スワイプしたら次のカードが少し上がるようにする
-    Animated.timing(pos2, {
-      toValue: { x: 0, y: -10 },
-      duration: 230,
-    }).start(() => {
-      pos.setValue({ x: 0, y: 0 });
-      pos2.setValue({ x: 0, y: 0 });
-      setCount((count) => count - 1);
-      setDeckIndex((prevDeckIndex) => prevDeckIndex + 1);
-    });
+    // Animated.timing(pos2, {
+    //   toValue: { x: 0, y: 0 },
+    //   duration: 120,
+    // }).start(() => {
+    pos.setValue({ x: 0, y: 0 });
+    // pos2.setValue({ x: 0, y: 0 });
+    setCount((count) => count - 1);
+    setDeckIndex((prevDeckIndex) => prevDeckIndex + 1);
+    // });
   };
 
   // スワイプが閾値まで行っていない場合は元の場所に戻す
@@ -102,6 +105,17 @@ const Deck = ({
       transform: [{ rotate }],
     };
   };
+
+  // スワイプ時のopacityを設定
+  const likeOpacity = pos.x.interpolate({
+    inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+    outputRange: [0, 0, 1],
+  });
+
+  const dislikeOpacity = pos.x.interpolate({
+    inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+    outputRange: [1, 0, 0],
+  });
 
   // レンダー
   const renderCards = () => {
@@ -124,25 +138,37 @@ const Deck = ({
             style={[getCardStyle(), styles.card(cardIndex)]}
             {...panResponder.panHandlers}
           >
+            <Animated.View style={{ ...styles.like, opacity: likeOpacity }}>
+              <Text style={styles.good}>ありがとう！</Text>
+            </Animated.View>
+            <Animated.View
+              style={{ ...styles.dislike, opacity: dislikeOpacity }}
+            >
+              <View>
+                <Text style={styles.sorry}>ごめんね。。</Text>
+              </View>
+            </Animated.View>
             {renderCard(item)}
           </Animated.View>
         );
       }
 
       // 後ろには３枚までのカードを重ねて表示
-      if (cardIndex < deckIndex + 3) {
-        return (
-          <Animated.View
-            key={item.id}
-            style={[
-              styles.card(cardIndex),
-              { top: 10 * (cardIndex - deckIndex) },
-            ]}
-          >
-            {renderCard(item)}
+      return (
+        <Animated.View key={item.id} style={[styles.card(cardIndex)]}>
+          <Animated.View style={{ ...styles.like, opacity: 0 }}>
+            <View>
+              <FontAwesome5 name="grin-beam" style={{ zIndex: 100 }} />
+            </View>
           </Animated.View>
-        );
-      }
+          <Animated.View style={{ ...styles.dislike, opacity: 0 }}>
+            <View>
+              <FontAwesome5 name="grin-beam" style={{ zIndex: 100 }} />
+            </View>
+          </Animated.View>
+          {renderCard(item)}
+        </Animated.View>
+      );
     });
   };
 
@@ -159,12 +185,8 @@ const Deck = ({
       <Animated.View style={pos2.getLayout()}>{renderCards()}</Animated.View>
       <View
         style={{
+          ...styles.buttonContainer,
           display: count <= 0 ? "none" : "flex",
-          flexDirection: "row",
-          position: "absolute",
-          bottom: Dimensions.get("window").height * 0.12,
-          justifyContent: "space-between",
-          width: SCREEN_WIDTH * 0.5,
         }}
       >
         <TouchComponent
@@ -174,7 +196,7 @@ const Deck = ({
             height: SCREEN_WIDTH * 0.2,
             width: SCREEN_WIDTH * 0.2,
           }}
-          onButtonPress={forceSwipe.bind(this, "left", true)}
+          onButtonPress={forceSwipe.bind(this, "left")}
         >
           <FontAwesome5
             name="grin-beam-sweat"
@@ -188,7 +210,7 @@ const Deck = ({
             height: SCREEN_WIDTH * 0.2,
             width: SCREEN_WIDTH * 0.2,
           }}
-          onButtonPress={forceSwipe.bind(this, "right", true)}
+          onButtonPress={forceSwipe.bind(this, "right")}
         >
           <FontAwesome5
             name="grin-beam"
@@ -220,7 +242,7 @@ const styles = {
     width: SCREEN_WIDTH * 0.5,
   },
   countText: {
-    color: "#e05c92",
+    color: Colors.color1,
     fontWeight: "bold",
     position: "absolute",
     fontSize: 18,
@@ -228,7 +250,50 @@ const styles = {
   buttonContainer: {
     flexDirection: "row",
     position: "absolute",
-    bottom: 0,
+    bottom: Dimensions.get("window").height * 0.15,
+    justifyContent: "space-between",
+    width: SCREEN_WIDTH * 0.5,
+  },
+  like: {
+    position: "absolute",
+    zIndex: 100,
+    top: SCREEN_WIDTH * 0.09,
+    left: 10,
+    transform: [{ rotate: "-30deg" }],
+    borderRadius: 10,
+  },
+  good: {
+    borderWidth: 1,
+    borderColor: "green",
+    justifyContent: "center",
+    fontSize: SCREEN_WIDTH * 0.04,
+    padding: 10,
+    color: "green",
+    fontWeight: "bold",
+  },
+  sorry: {
+    borderWidth: 1,
+    borderColor: "red",
+    justifyContent: "center",
+    fontSize: SCREEN_WIDTH * 0.04,
+    padding: 10,
+    color: "red",
+    fontWeight: "bold",
+  },
+  dislike: {
+    position: "absolute",
+    top: SCREEN_WIDTH * 0.09,
+    right: 10,
+    zIndex: 100,
+    transform: [{ rotate: "30deg" }],
+  },
+  wrapper: {
+    width: SCREEN_WIDTH * 0.2,
+    height: SCREEN_WIDTH * 0.2,
+    backgroundColor: "white",
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
   },
 };
 

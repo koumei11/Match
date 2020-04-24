@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 
-import ButtonComponent from "../../components/ButtonComponent";
+import ButtonComponent from "../../components/buttons/ButtonComponent";
 
 import { useFonts } from "@use-expo/font";
 import { FontAwesome } from "@expo/vector-icons";

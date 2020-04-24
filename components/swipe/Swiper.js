@@ -1,18 +1,18 @@
 import React, { useState, useRef } from "react";
-import {
-  Text,
-  View,
-  Dimensions,
-  Platform,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { Text, View, Dimensions } from "react-native";
 import Deck from "./Deck";
 import persons from "../../dummy-data/persons";
 import Card from "../Card";
+import Colors from "../../constants/Colors";
+import ButtonComponent from "../../components/buttons/ButtonComponent";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const Swiper = (props) => {
   //   const [count, setCount] = useState(persons.length);
-  //   const ref = useRef(persons);
+  const ref = useRef(persons);
   const renderCard = (person) => {
     return (
       <Card
@@ -23,9 +23,9 @@ const Swiper = (props) => {
         hasVideo={person.hasVideo}
         intro={person.intro}
         originalStyles={{
-          width: Dimensions.get("window").width * 0.5,
-          height: Dimensions.get("window").height * 0.4,
-          borderWidth: person.hasVideo ? 0 : 0.6,
+          width: SCREEN_WIDTH * 0.5,
+          height: SCREEN_HEIGHT * 0.4,
+          borderWidth: person.hasVideo ? 0 : 0,
         }}
       />
     );
@@ -36,8 +36,12 @@ const Swiper = (props) => {
     console.log("Swiped Right!!!");
     // setData((data) => data.filter((person) => person.id !== item.id));
     // setCount((count) => count - 1);
-    // console.log(item);
-    // ref.current = ref.current.filter((person) => person.id !== item.id);
+    if (item) {
+      ref.current = ref.current.filter((person) => person.id !== item.id);
+      //   console.log(ref.current);
+    } else {
+      console.log(false);
+    }
   };
 
   // 左にスワイプされた時に発火
@@ -45,24 +49,48 @@ const Swiper = (props) => {
     console.log("Swiped Left!!!");
     // setData((data) => data.filter((person) => person.id !== item.id));
     // setCount((count) => count - 1);
-    // console.log(item);
-    // ref.current = ref.current.filter((person) => person.id !== item.id);
+    if (item) {
+      ref.current = ref.current.filter((person) => person.id !== item.id);
+      //   console.log(ref.current);
+    } else {
+      console.log(false);
+    }
   };
 
   const renderNoMoreCards = () => {
     return (
-      <View>
-        <Text>終わり</Text>
+      <View
+        style={{
+          marginRight: "31%",
+          top: SCREEN_HEIGHT * 0.1,
+        }}
+      >
+        <MaterialCommunityIcons
+          name="cards-outline"
+          size={SCREEN_HEIGHT * 0.1}
+          color={Colors.headerColor}
+          style={{ marginLeft: "27%", marginBottom: 30 }}
+        />
+        <Text
+          style={{
+            fontSize: 16,
+            color: Colors.headerColor,
+            marginBottom: 50,
+          }}
+        >
+          もらった「いいね」がありません。
+        </Text>
+        <ButtonComponent originalStyles={{ backgroundColor: Colors.baseColor }}>
+          <Text style={{ color: "white" }}>いいね！履歴を見る</Text>
+        </ButtonComponent>
       </View>
     );
   };
 
   return (
     <View style={{ top: "5%" }}>
-      {/* <Text>{ref.current.length}</Text> */}
-      {/* <Text>{count}</Text> */}
       <Deck
-        data={persons}
+        data={persons.reverse()}
         renderCard={renderCard}
         renderNoMoreCards={renderNoMoreCards}
         onSwipeRight={onSwipeRight}

@@ -16,8 +16,11 @@ import persons from "../../dummy-data/persons";
 import Colors from "../../constants/Colors";
 import { Feather } from "@expo/vector-icons";
 
+// ヘッダーの高さを指定
 const HEADER_HEIGHT = Dimensions.get("window").height * 0.15;
+// ステータスの高さを指定
 const STATUS_BAR_HEIGHT = Platform.select({ ios: 20, android: 24 });
+// FlatListでアニメーションをするため
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const PersonListScreen = () => {
@@ -27,6 +30,7 @@ const PersonListScreen = () => {
       ? TouchableNativeFeedback
       : TouchableOpacity;
 
+  // スクロールに応じてヘッダーを出し入れするためここでstateを宣言
   const [scrollAnim, setScrollAnim] = useState(new Animated.Value(0));
   const [offsetAnim, setOffsetAnim] = useState(new Animated.Value(0));
   const [clampedScroll, setClampedScroll] = useState(
@@ -44,11 +48,14 @@ const PersonListScreen = () => {
     )
   );
 
+  // スクロールの初期値を設定
   let _clampedScrollValue = 0;
   let _offsetValue = 0;
   let _scrollValue = 0;
 
+  // スクロール時にイベントを設定
   useEffect(() => {
+    // マウント時に発火
     scrollAnim.addListener(({ value }) => {
       const diff = value - _scrollValue;
       _scrollValue = value;
@@ -61,6 +68,7 @@ const PersonListScreen = () => {
       _offsetValue = value;
     });
 
+    // アンマウント時に関数ないが実行される
     return () => {
       scrollAnim.removeAllListeners();
       offsetAnim.removeAllListeners();
@@ -83,6 +91,7 @@ const PersonListScreen = () => {
         ? _offsetValue + HEADER_HEIGHT
         : _offsetValue - HEADER_HEIGHT;
 
+    // アニメーションの持続時間を設定
     Animated.timing(offsetAnim, {
       toValue,
       duration: 350,
@@ -90,6 +99,7 @@ const PersonListScreen = () => {
     }).start();
   };
 
+  // ヘッダーのアニメーション設定
   const headerTranslate = clampedScroll.interpolate({
     inputRange: [0, HEADER_HEIGHT - STATUS_BAR_HEIGHT],
     outputRange: [0, -(HEADER_HEIGHT - STATUS_BAR_HEIGHT + 50)],

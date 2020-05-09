@@ -13,6 +13,7 @@ const Card = ({
   originalStyles,
 }) => {
   // ビデオを投稿しているかどうかで条件分岐
+  // Cardの周りにインスタグラムのような枠を作る
   const configs = hasVideo
     ? {
         colors: ["#CA1D7E", "#E35157", "#F2703F"],

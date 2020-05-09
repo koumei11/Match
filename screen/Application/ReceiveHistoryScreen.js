@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 const ReceiveHistoryScreen = () => {
   return (
     <View style={styles.screen}>
-      <Text>good履歴</Text>
+      <Text>履歴画面</Text>
     </View>
   );
 };

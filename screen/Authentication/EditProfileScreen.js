@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import RadioButton from "../../components/buttons/RadioButton";
 import RNPickerSelect from "react-native-picker-select";
-import places from "../../data/places";
+import placesPicker from "../../data/placesPicker";
 import Colors from "../../constants/Colors";
 import { Avatar } from "react-native-elements";
 
@@ -97,7 +97,7 @@ const EditProfileScreen = () => {
             <Text>住んでるところ</Text>
             <RNPickerSelect
               onValueChange={(value) => console.log(value)}
-              items={places}
+              items={placesPicker}
               placeholder={{ label: "選択してください", value: "" }}
               style={pickerSelectStyles}
             />

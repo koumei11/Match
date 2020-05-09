@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -16,6 +16,10 @@ import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { AppLoading } from "expo";
 
+import AuthContext from "../../context";
+
+// const { signin } = useContext(AuthContext);
+
 const SignInScreen = () => {
   let [fontsLoaded] = useFonts({
     "open-sans": require("../../assets/fonts/OpenSans-Regular.ttf"),
@@ -27,7 +31,10 @@ const SignInScreen = () => {
   } else {
     return (
       <SafeAreaView style={styles.screen}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.container}>
             <View>
               <Text

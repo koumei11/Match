@@ -12,4 +12,5 @@ export default {
   buttonColor: "#1AA0FB",
   buttonColor2: "#66CCCC",
   color1: "#e05c92",
+  color2: "#CBCED0",
 };

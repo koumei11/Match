@@ -3,22 +3,31 @@ import {
   // Text,
   // View,
   // Button,
-  // Dimensions,
+  Dimensions,
   // Platform,
   View,
 } from "react-native";
 // import Card from "../../components/Card";
 import Swiper from "../../components/swipe/Swiper";
+import persons from "../../dummy-data/persons";
 // import { FontAwesome5 } from "@expo/vector-icons";
 // import persons from "../../dummy-data/persons";
 // import Colors from "../../constants/Colors";
 // import ButtonComponent from "../../components/ButtonComponent";
 // import { LinearGradient } from "expo-linear-gradient";
 
-const ReceiveGoodScreen = () => {
+const SCREEN_WIDTH = Dimensions.get("window").width;
+
+const ReceiveGoodScreen = ({ navigation }) => {
   return (
-    <View style={{ backgroundColor: "#fff", flex: 1, paddingLeft: "25%" }}>
-      <Swiper />
+    <View
+      style={{
+        backgroundColor: "#fff",
+        flex: 1,
+        paddingLeft: SCREEN_WIDTH / 2 - (SCREEN_WIDTH * 0.6) / 2,
+      }}
+    >
+      <Swiper navigation={navigation} persons={persons} />
     </View>
   );
 };

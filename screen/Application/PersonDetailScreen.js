@@ -1,10 +1,18 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-const PersonDetailScreen = () => {
+const PersonDetailScreen = ({ route, navigation }) => {
+  const id = route.params.id;
   return (
     <View style={styles.screen}>
-      <Text>お相手詳細画面</Text>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.pop();
+        }}
+      >
+        <Text>←</Text>
+      </TouchableOpacity>
+      <Text>この人のidは{id}です。</Text>
     </View>
   );
 };

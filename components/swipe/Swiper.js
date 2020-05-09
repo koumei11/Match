@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import { Text, View, Dimensions } from "react-native";
+import React, { useRef } from "react";
+import { Text, View, Dimensions, StyleSheet } from "react-native";
 import Deck from "./Deck";
 import persons from "../../dummy-data/persons";
 import Card from "../Card";
@@ -13,6 +13,7 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 const Swiper = (props) => {
   //   const [count, setCount] = useState(persons.length);
   const ref = useRef(persons);
+
   const renderCard = (person) => {
     return (
       <Card
@@ -23,9 +24,10 @@ const Swiper = (props) => {
         hasVideo={person.hasVideo}
         intro={person.intro}
         originalStyles={{
-          width: SCREEN_WIDTH * 0.5,
-          height: SCREEN_HEIGHT * 0.4,
+          width: SCREEN_WIDTH * 0.6,
+          height: SCREEN_HEIGHT * 0.5,
           borderWidth: person.hasVideo ? 0 : 0,
+          marginVertical: 15,
         }}
       />
     );
@@ -37,7 +39,9 @@ const Swiper = (props) => {
     // setData((data) => data.filter((person) => person.id !== item.id));
     // setCount((count) => count - 1);
     if (item) {
-      ref.current = ref.current.filter((person) => person.id !== item.id);
+      ref.current = ref.current.filter((person) => {
+        return person.id !== item.id;
+      });
       //   console.log(ref.current);
     } else {
       console.log(false);
@@ -95,6 +99,7 @@ const Swiper = (props) => {
         renderNoMoreCards={renderNoMoreCards}
         onSwipeRight={onSwipeRight}
         onSwipeLeft={onSwipeLeft}
+        navigation={props.navigation}
       />
     </View>
   );

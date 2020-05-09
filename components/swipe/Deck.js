@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Text, View, Animated, PanResponder, Dimensions } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import TouchComponent from "../buttons/TouchComponent";
 import Colors from "../../constants/Colors";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
 
@@ -14,6 +15,7 @@ const Deck = ({
   onSwipeRight,
   onSwipeLeft,
   renderNoMoreCards,
+  navigation,
 }) => {
   // カードのポジション
   const [pos, setPos] = useState(new Animated.ValueXY());
@@ -23,37 +25,43 @@ const Deck = ({
   const [deckIndex, setDeckIndex] = useState(0);
   // もらったいいねのカウント数
   const [count, setCount] = useState(data.length);
-  // 現在のターゲット
-  const person = data[deckIndex];
 
-  // 頻繁に呼ばれるためuseMemoでキャッシュしておく
-  const panResponder = useMemo(
-    () =>
-      PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
-        // カードをドラッグするたびに呼ばれる
-        onPanResponderMove: (event, gesture) => {
-          pos.setValue({ x: gesture.dx, y: gesture.dy });
-        },
-        // カードのドラッグを離すと呼ばれる
-        onPanResponderRelease: (event, gesture) => {
-          // 動いていなかったらクリックしたとみなす
-          if (gesture.dx === 0 && gesture.dy === 0) {
-            console.log("navigationする");
-          } else if (gesture.dx > SWIPE_THRESHOLD) {
-            // ある閾値まで動いたら右にスワイプ
-            forceSwipe("right");
-          } else if (gesture.dx < -SWIPE_THRESHOLD) {
-            // ある閾値まで動いたら左にスワイプ
-            forceSwipe("left");
-          } else {
-            // 閾値まで行ってなければ元の場所に戻す
-            resetPosition();
-          }
-        },
-      }),
-    []
-  );
+  // アニメーションの設定
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    // カードをドラッグするたびに呼ばれる
+    onPanResponderMove: (event, gesture) => {
+      pos.setValue({ x: gesture.dx, y: gesture.dy });
+    },
+    // カードのドラッグを離すと呼ばれる
+    onPanResponderRelease: (event, gesture) => {
+      // 動いていなかったらクリックしたとみなす
+      if (gesture.dx === 0 && gesture.dy === 0) {
+        navigation.navigate("Person", { id: data[deckIndex].id });
+      } else if (gesture.dx > SWIPE_THRESHOLD) {
+        // ある閾値まで動いたら右にスワイプ
+        forceSwipe("right");
+      } else if (gesture.dx < -SWIPE_THRESHOLD) {
+        // ある閾値まで動いたら左にスワイプ
+        forceSwipe("left");
+      } else {
+        // 閾値まで行ってなければ元の場所に戻す
+        resetPosition();
+      }
+    },
+    // onPanResponderTerminate: (event, gesture) => {
+    //   if (gesture.dx > SWIPE_THRESHOLD) {
+    //     // ある閾値まで動いたら右にスワイプ
+    //     forceSwipe("right");
+    //   } else if (gesture.dx < -SWIPE_THRESHOLD) {
+    //     // ある閾値まで動いたら左にスワイプ
+    //     forceSwipe("left");
+    //   } else {
+    //     // 閾値まで行ってなければ元の場所に戻す
+    //     resetPosition();
+    //   }
+    // },
+  });
 
   useEffect(() => {
     setDeckIndex(0);
@@ -65,26 +73,25 @@ const Deck = ({
     const x = direction === "right" ? SCREEN_WIDTH * 1.5 : -SCREEN_WIDTH * 1.5;
     Animated.timing(pos, {
       toValue: { x, y: 0 },
-      duration: SWIPE_OUT_DURATION * 2.5,
+      duration: SWIPE_OUT_DURATION * 1.5,
     }).start(() => onSwipeComplete(direction));
   };
 
   // スワイプ終了時に呼ばれる
   const onSwipeComplete = (direction) => {
+    const person = data[deckIndex];
     // 右スワイプ、左スワイプで別々の関数を呼び出す
-    console.log(deckIndex);
     direction === "right" ? onSwipeRight(person) : onSwipeLeft(person);
 
-    // スワイプしたら次のカードが少し上がるようにする
-    // Animated.timing(pos2, {
-    //   toValue: { x: 0, y: 0 },
-    //   duration: 120,
-    // }).start(() => {
-    pos.setValue({ x: 0, y: 0 });
-    // pos2.setValue({ x: 0, y: 0 });
-    setCount((count) => count - 1);
-    setDeckIndex((prevDeckIndex) => prevDeckIndex + 1);
-    // });
+    Animated.timing(pos2, {
+      toValue: { x: 0, y: 0 },
+      duration: 120,
+    }).start(() => {
+      pos.setValue({ x: 0, y: 0 });
+      pos2.setValue({ x: 0, y: 0 });
+      setCount((count) => count - 1);
+      setDeckIndex((prevDeckIndex) => prevDeckIndex + 1);
+    });
   };
 
   // スワイプが閾値まで行っていない場合は元の場所に戻す
@@ -153,7 +160,6 @@ const Deck = ({
         );
       }
 
-      // 後ろには３枚までのカードを重ねて表示
       return (
         <Animated.View key={item.id} style={[styles.card(cardIndex)]}>
           <Animated.View style={{ ...styles.like, opacity: 0 }}>
@@ -183,41 +189,7 @@ const Deck = ({
         <Text style={styles.countText}>{count}</Text>
       </View>
       <Animated.View style={pos2.getLayout()}>{renderCards()}</Animated.View>
-      <View
-        style={{
-          ...styles.buttonContainer,
-          display: count <= 0 ? "none" : "flex",
-        }}
-      >
-        <TouchComponent
-          original={{
-            display: count <= 0 ? "none" : "flex",
-            borderColor: "#E54E37",
-            height: SCREEN_WIDTH * 0.2,
-            width: SCREEN_WIDTH * 0.2,
-          }}
-          onButtonPress={forceSwipe.bind(this, "left")}
-        >
-          <FontAwesome5
-            name="grin-beam-sweat"
-            style={{ color: "#E54E37", fontSize: SCREEN_WIDTH * 0.07 }}
-          />
-        </TouchComponent>
-        <TouchComponent
-          original={{
-            display: count <= 0 ? "none" : "flex",
-            borderColor: "#66CCCC",
-            height: SCREEN_WIDTH * 0.2,
-            width: SCREEN_WIDTH * 0.2,
-          }}
-          onButtonPress={forceSwipe.bind(this, "right")}
-        >
-          <FontAwesome5
-            name="grin-beam"
-            style={{ color: "#66CCCC", fontSize: SCREEN_WIDTH * 0.07 }}
-          />
-        </TouchComponent>
-      </View>
+      <Text style={styles.bottom}>スワイプできます</Text>
     </View>
   );
 };
@@ -234,12 +206,11 @@ const styles = {
     zIndex: cardIndex * -1,
   }),
   countContainer: {
-    flexDirection: "row",
     fontWeight: "bold",
     marginBottom: SCREEN_WIDTH * 0.1,
     alignItems: "center",
-    justifyContent: "center",
-    width: SCREEN_WIDTH * 0.5,
+    justifyContent: "flex-start",
+    width: SCREEN_WIDTH * 0.6,
   },
   countText: {
     color: Colors.color1,
@@ -257,32 +228,32 @@ const styles = {
   like: {
     position: "absolute",
     zIndex: 100,
-    top: SCREEN_WIDTH * 0.09,
+    top: SCREEN_WIDTH * 0.14,
     left: 10,
     transform: [{ rotate: "-30deg" }],
     borderRadius: 10,
   },
   good: {
     borderWidth: 1,
-    borderColor: "green",
+    borderColor: "#66CCCC",
     justifyContent: "center",
     fontSize: SCREEN_WIDTH * 0.04,
     padding: 10,
-    color: "green",
+    color: "#66CCCC",
     fontWeight: "bold",
   },
   sorry: {
     borderWidth: 1,
-    borderColor: "red",
+    borderColor: "#E54E37",
     justifyContent: "center",
     fontSize: SCREEN_WIDTH * 0.04,
     padding: 10,
-    color: "red",
+    color: "#E54E37",
     fontWeight: "bold",
   },
   dislike: {
     position: "absolute",
-    top: SCREEN_WIDTH * 0.09,
+    top: SCREEN_WIDTH * 0.14,
     right: 10,
     zIndex: 100,
     transform: [{ rotate: "30deg" }],
@@ -294,6 +265,14 @@ const styles = {
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
+  },
+  bottom: {
+    position: "absolute",
+    bottom: SCREEN_HEIGHT * 0.12,
+    fontSize: 12,
+    width: SCREEN_WIDTH * 0.6,
+    textAlign: "center",
+    color: Colors.subColor2,
   },
 };
 
